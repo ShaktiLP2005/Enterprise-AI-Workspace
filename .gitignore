@@ -12,6 +12,10 @@ venv/
 # ChromaDB
 chroma_db/
 
+# Runtime uploaded files
+data/uploads/*
+!data/uploads/.gitkeep
+
 # VS Code
 .vscode/
 
