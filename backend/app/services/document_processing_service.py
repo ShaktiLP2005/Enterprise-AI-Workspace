@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi import UploadFile
 
 from app.services.document_service import save_document
@@ -23,9 +25,13 @@ def process_document(file: UploadFile) -> dict:
     # Split text into chunks
     chunks = chunk_text(cleaned_text)
 
+    # Build document metadata
+    metadata = {
+        "filename": Path(path).name
+    }
+
     return {
-        "message": "Document processed successfully",
         "path": path,
-        "total_chunks": len(chunks),
-        "chunks": chunks
+        "chunks": chunks,
+        "metadata": metadata
     }

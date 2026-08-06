@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.api import upload
+from app.api import upload, query
 
 app = FastAPI(
     title="Enterprise AI Workspace",
@@ -8,7 +8,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Register routers
 app.include_router(upload.router)
+app.include_router(query.router)
 
 
 @app.get("/")
