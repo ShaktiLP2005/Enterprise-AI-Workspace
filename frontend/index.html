@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Enterprise AI Workspace</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <header>
+            <h1>Enterprise AI Workspace</h1>
+            <p>Upload documents and ask questions using AI-powered document retrieval.</p>
+        </header>
+
+
+        <!-- Document Upload -->
+
+        <section class="card">
+
+            <h2>Upload Documents</h2>
+
+            <p class="description">
+                Upload one or more PDF documents to add them to the knowledge base.
+            </p>
+
+            <input
+                type="file"
+                id="fileInput"
+                multiple
+                accept=".pdf"
+            >
+
+            <div id="selectedFiles"></div>
+
+            <button id="uploadButton">
+                Upload & Ingest
+            </button>
+
+            <div id="uploadStatus"></div>
+
+        </section>
+
+
+        <!-- Query -->
+
+        <section class="card">
+
+            <h2>Ask a Question</h2>
+
+            <textarea
+                id="queryInput"
+                placeholder="Ask something about your documents..."
+                rows="4"
+            ></textarea>
+
+            <button id="queryButton">
+                Ask
+            </button>
+
+            <div id="queryStatus"></div>
+
+        </section>
+
+
+        <!-- Answer -->
+
+        <section
+            class="card"
+            id="answerSection"
+            style="display: none;"
+        >
+
+            <h2>Answer</h2>
+
+            <div id="answer"></div>
+
+        </section>
+
+
+        <!-- Sources -->
+
+        <section
+            class="card"
+            id="sourcesSection"
+            style="display: none;"
+        >
+
+            <h2>Sources</h2>
+
+            <div id="sources"></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>

@@ -1,11 +1,10 @@
-from pathlib import Path
-
 from fastapi import UploadFile
 
 from app.services.document_service import save_document
 from app.services.text_extraction_service import extract_text
 from app.services.text_cleaning_service import clean_text
 from app.services.chunking_service import chunk_text
+from app.services.rag_ingestion_service import ingest_document
 
 
 def process_document(file: UploadFile) -> dict:
@@ -13,8 +12,12 @@ def process_document(file: UploadFile) -> dict:
     Process an uploaded document from start to finish.
     """
 
-    # Save uploaded document
-    path = save_document(file)
+    # Save document and generate its identity
+    document = save_document(file)
+
+    document_id = document["document_id"]
+    filename = document["filename"]
+    path = document["path"]
 
     # Extract raw text
     raw_text = extract_text(path)
@@ -27,11 +30,21 @@ def process_document(file: UploadFile) -> dict:
 
     # Build document metadata
     metadata = {
-        "filename": Path(path).name
+        "document_id": document_id,
+        "filename": filename
     }
 
+    # Generate embeddings and store them
+    ingestion_result = ingest_document(
+        chunks=chunks,
+        metadata=metadata
+    )
+
     return {
+        "message": "Document uploaded and ingested successfully.",
+        "document_id": document_id,
+        "filename": filename,
         "path": path,
-        "chunks": chunks,
-        "metadata": metadata
+        "total_chunks": len(chunks),
+        "collection": ingestion_result["collection"]
     }

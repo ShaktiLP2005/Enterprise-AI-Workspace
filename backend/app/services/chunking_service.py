@@ -6,10 +6,17 @@ def chunk_text(text: str) -> list[str]:
     Split cleaned text into overlapping chunks.
     """
 
-    # Configure recursive chunking
+    # Configure recursive chunking with a better separator hierarchy
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=100,
+        chunk_size=800,
+        chunk_overlap=150,
+        separators=[
+            "\n\n",
+            "\n",
+            ". ",
+            " ",
+            ""
+        ],
         length_function=len,
     )
 

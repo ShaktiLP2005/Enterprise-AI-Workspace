@@ -1,7 +1,8 @@
+from typing import Annotated
+
 from fastapi import APIRouter, UploadFile, File
 
 from app.services.document_processing_service import process_document
-from app.services.rag_ingestion_service import ingest_document
 
 
 router = APIRouter(
@@ -11,23 +12,20 @@ router = APIRouter(
 
 
 @router.post("/")
-def upload_document(file: UploadFile = File(...)):
+def upload_documents(
+    files: Annotated[list[UploadFile], File(...)]
+):
     """
-    Upload, process, and ingest a document into the vector database.
+    Upload and ingest multiple documents.
     """
 
-    # Process the uploaded document
-    processed_document = process_document(file)
+    results = []
 
-    # Ingest the processed document into ChromaDB
-    ingestion_result = ingest_document(
-        chunks=processed_document["chunks"],
-        metadata=processed_document["metadata"]
-    )
+    for file in files:
+        result = process_document(file)
+        results.append(result)
 
     return {
-        "message": "Document uploaded and ingested successfully.",
-        "path": processed_document["path"],
-        "total_chunks": len(processed_document["chunks"]),
-        "collection": ingestion_result["collection"]
+        "message": "Documents uploaded and ingested successfully.",
+        "documents": results
     }

@@ -2,24 +2,24 @@ from pathlib import Path
 
 import chromadb
 
+from app.core.config import settings
 
-# Get the absolute path of this file
-CURRENT_FILE = Path(__file__).resolve()
-
-# Navigate to the project root
-PROJECT_ROOT = CURRENT_FILE.parents[3]
 
 # Directory where ChromaDB stores its data
-CHROMA_DB_DIR = PROJECT_ROOT / "chroma_db"
+CHROMA_DB_DIR = Path(settings.CHROMA_DB_DIR)
+
+# Create the directory if it doesn't exist
+CHROMA_DB_DIR.mkdir(parents=True, exist_ok=True)
 
 # Collection name for storing document embeddings
 COLLECTION_NAME = "documents"
 
 
 # Create a persistent ChromaDB client
-client = chromadb.PersistentClient(path=str(CHROMA_DB_DIR))
+client = chromadb.PersistentClient(
+    path=str(CHROMA_DB_DIR)
+)
 
-# Create the collection if it doesn't already exist
 collection = client.get_or_create_collection(
     name=COLLECTION_NAME
 )
@@ -38,25 +38,43 @@ def store_embeddings(
 ):
     """
     Store document chunks and embeddings in ChromaDB.
+
+    If a document with the same filename already exists,
+    its previous chunks are removed before storing the new version.
     """
 
     try:
-        # Get the ChromaDB collection
+        if len(chunks) != len(embeddings):
+            raise ValueError(
+                "Number of chunks must match number of embeddings."
+            )
+
         collection = get_collection()
 
-        # Generate a unique ID for every chunk
+        document_id = metadata["document_id"]
+        filename = metadata["filename"]
+
+        # Remove the previous version of the same document
+        collection.delete(
+            where={"filename": filename}
+        )
+
+        # Generate unique IDs for every chunk
         ids = [
-            f"{metadata['filename']}_chunk_{index + 1}"
+            f"{document_id}_chunk_{index + 1}"
             for index in range(len(chunks))
         ]
 
-        # Duplicate metadata for every chunk
+        # Add chunk-specific metadata
         metadatas = [
-            metadata.copy()
-            for _ in chunks
+            {
+                **metadata,
+                "chunk_index": index + 1
+            }
+            for index in range(len(chunks))
         ]
 
-        # Store everything in ChromaDB
+        # Store chunks, embeddings, and metadata
         collection.add(
             ids=ids,
             documents=chunks,
@@ -67,11 +85,15 @@ def store_embeddings(
         return {
             "message": "Embeddings stored successfully.",
             "collection": COLLECTION_NAME,
+            "document_id": document_id,
+            "filename": filename,
             "chunks_stored": len(chunks)
         }
 
     except Exception as error:
-        raise RuntimeError(f"Failed to store embeddings: {error}")
+        raise RuntimeError(
+            f"Failed to store embeddings: {error}"
+        )
 
 def search_embeddings(
     query_embedding: list[float],

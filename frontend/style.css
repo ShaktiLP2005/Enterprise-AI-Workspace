@@ -1,0 +1,175 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    color: #1f2937;
+    min-height: 100vh;
+}
+
+.container {
+    width: min(900px, 92%);
+    margin: 0 auto;
+    padding: 50px 0;
+}
+
+/* Header */
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+/* Cards */
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.card h2 {
+    margin-bottom: 10px;
+}
+
+.description {
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+/* File input */
+
+input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background: #f9fafb;
+}
+
+/* Selected files */
+
+#selectedFiles {
+    margin-bottom: 15px;
+}
+
+.file-item {
+    background: #f3f4f6;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+/* Textarea */
+
+textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+textarea:focus,
+input[type="file"]:focus {
+    outline: 2px solid #2563eb;
+    border-color: #2563eb;
+}
+
+/* Buttons */
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    background: #2563eb;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Status */
+
+#uploadStatus,
+#queryStatus {
+    margin-top: 15px;
+    font-size: 0.95rem;
+}
+
+/* Answer */
+
+#answer {
+    white-space: pre-wrap;
+    line-height: 1.7;
+    background: #f9fafb;
+    padding: 18px;
+    border-radius: 8px;
+}
+
+/* Sources */
+
+.source {
+    background: #f9fafb;
+    border-left: 4px solid #2563eb;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.source strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.source span {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .container {
+        padding: 30px 0;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .card {
+        padding: 20px;
+    }
+}
