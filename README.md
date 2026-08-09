@@ -103,7 +103,7 @@ The system can retrieve information from multiple documents for a single query.
 
 For example:
 
-> What is Shakti's CGPA and what are the software installation instructions?
+> What projects has Shakti built and what are the software installation instructions?
 
 The system can retrieve the relevant information from both documents and generate a combined answer.
 
