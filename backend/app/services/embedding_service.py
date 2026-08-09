@@ -15,14 +15,18 @@ except Exception as error:
 
 
 def generate_embeddings(
-    chunks: list[str]
+    chunks: list[str],
+    batch_size: int = 16
 ) -> list[list[float]]:
     """
-    Generate embeddings for document chunks.
+    Generate embeddings for document chunks in batches.
     """
 
     try:
-        embeddings = model.embed(chunks)
+        embeddings = model.embed(
+            chunks,
+            batch_size=batch_size
+        )
 
         return [
             embedding.tolist()
@@ -33,7 +37,6 @@ def generate_embeddings(
         raise RuntimeError(
             f"Failed to generate embeddings: {error}"
         )
-
 
 def generate_query_embedding(
     query: str

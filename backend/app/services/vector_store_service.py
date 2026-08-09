@@ -34,13 +34,11 @@ def get_collection():
 def store_embeddings(
     chunks: list[str],
     embeddings: list[list[float]],
-    metadata: dict
+    metadata: dict,
+    start_index: int = 0
 ):
     """
-    Store document chunks and embeddings in ChromaDB.
-
-    If a document with the same filename already exists,
-    its previous chunks are removed before storing the new version.
+    Store a batch of document chunks and embeddings in ChromaDB.
     """
 
     try:
@@ -54,14 +52,9 @@ def store_embeddings(
         document_id = metadata["document_id"]
         filename = metadata["filename"]
 
-        # Remove the previous version of the same document
-        collection.delete(
-            where={"filename": filename}
-        )
-
         # Generate unique IDs for every chunk
         ids = [
-            f"{document_id}_chunk_{index + 1}"
+            f"{document_id}_chunk_{start_index + index + 1}"
             for index in range(len(chunks))
         ]
 
@@ -69,7 +62,7 @@ def store_embeddings(
         metadatas = [
             {
                 **metadata,
-                "chunk_index": index + 1
+                "chunk_index": start_index + index + 1
             }
             for index in range(len(chunks))
         ]
@@ -115,3 +108,21 @@ def search_embeddings(
 
     except Exception as error:
         raise RuntimeError(f"Failed to search embeddings: {error}")
+
+
+def delete_document_embeddings(filename: str):
+    """
+    Remove all existing chunks for a document before re-ingestion.
+    """
+
+    try:
+        collection = get_collection()
+
+        collection.delete(
+            where={"filename": filename}
+        )
+
+    except Exception as error:
+        raise RuntimeError(
+            f"Failed to delete previous document version: {error}"
+        )
