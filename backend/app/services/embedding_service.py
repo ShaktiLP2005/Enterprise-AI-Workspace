@@ -5,7 +5,8 @@ from app.core.config import settings
 try:
     # Load the embedding model once when this module is imported
     model = TextEmbedding(
-        model_name=settings.EMBEDDING_MODEL
+        model_name=settings.EMBEDDING_MODEL,
+        threads=1
     )
 
 except Exception as error:
@@ -16,7 +17,7 @@ except Exception as error:
 
 def generate_embeddings(
     chunks: list[str],
-    batch_size: int = 16
+    batch_size: int = 4
 ) -> list[list[float]]:
     """
     Generate embeddings for document chunks in batches.
@@ -37,6 +38,7 @@ def generate_embeddings(
         raise RuntimeError(
             f"Failed to generate embeddings: {error}"
         )
+
 
 def generate_query_embedding(
     query: str
